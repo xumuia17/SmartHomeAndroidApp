@@ -34,7 +34,15 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity{
 
     public static String dataFromAsyncTask;
-    AsyncRequest asyncRequest= new AsyncRequest();
+    public Boolean getBool(String str) {
+        if (str.equals("1"))
+        {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
 
     @Override
@@ -46,7 +54,9 @@ public class MainActivity extends AppCompatActivity{
         final Button sunrise = (Button) findViewById(R.id.button4);
         final TextView txt = (TextView) findViewById(R.id.textView);
         final TextView txtSwitch = (TextView) findViewById(R.id.textView3);
-        final Switch swBathroom = (Switch) findViewById(R.id.switch1);
+        final Switch swHall = (Switch) findViewById(R.id.switch1);
+        final Switch swBedroom = (Switch) findViewById(R.id.switch2);
+        final Switch swKitchen = (Switch) findViewById(R.id.switch3);
 
 
 
@@ -55,7 +65,7 @@ public class MainActivity extends AppCompatActivity{
         /*Запускаем сервисы*/
         startService(new Intent(MainActivity.this, Synchronize.class));
 
-        swBathroom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        swKitchen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     txtSwitch.setText("Checked");
@@ -84,8 +94,15 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void onClick(View v){
+                AsyncRequest asyncRequest= new AsyncRequest();
                 asyncRequest.execute("http://192.168.1.34:4567/synchronize");
-                txt.setText(dataFromAsyncTask);
+                String swRes1 = dataFromAsyncTask.substring(0,1);
+                String swRes2 = dataFromAsyncTask.substring(2,3);
+                String swRes3 = dataFromAsyncTask.substring(4,5);
+                swHall.setChecked(getBool(swRes1));
+                swKitchen.setChecked(getBool(swRes2));
+                swBedroom.setChecked(getBool(swRes3));
+
             }
         };
 
